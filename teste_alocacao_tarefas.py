@@ -27,7 +27,7 @@ def main():
     """
     Função principal para simular a alocação de tarefas em servidores.
     """
-    exemplo_id = "exemplo1" 
+    exemplo_id = "exemplo3" 
     url = f"http://127.0.0.1:5000/api/tarefas/{exemplo_id}"
     response = requests.get(url)
     if response.status_code == 200:
@@ -44,7 +44,7 @@ def main():
         servidores = [Servidor(id=i+1) for i in range(num_servidores)]
 
         alocador = AlocadorTarefas(tarefas, servidores)
-        melhor_alocacao, melhor_makespan = alocador.alocar_guloso()
+        melhor_alocacao, melhor_makespan = alocador.alocar_exaustivo()
 
         print(f"Simulação de Alocação de Tarefas - {exemplo_id.upper()}")
         print("=" * 50)

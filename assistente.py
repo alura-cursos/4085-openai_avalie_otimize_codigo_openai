@@ -2,10 +2,23 @@ from openai import OpenAI
 from helper_models import MODELO_GPT
 from dotenv import load_dotenv
 import os
+import google.generativeai as genai
 
 load_dotenv()
 
 class Assistente:
+  def avaliar_resultado(self, resultado_avaliado, pergunta):
+        CHAVE_API_GEMINI = os.getenv("GEMINI_API_KEY")
+        genai.configure(api_key=CHAVE_API_GEMINI)
+        prompt_sistema = "Você é um avaliador de respostas da área de computação. Seu objetivo é verificar se códigos ou sugestões estão corretas e indicar, de forma estruturada, os erros e oportunidades de melhoria. Dê um parecer da qualidade da solução."
+        llm = genai.GenerativeModel(
+            model_name = 'gemini-1.5-pro',
+            system_instruction = prompt_sistema
+        )
+        resposta = llm.generate_content(f"{resultado_avaliado} . Pergunta: {pergunta}")
+
+        return resposta.text
+
   def __init__(self, nome, instrucoes):
     CHAVE_API = os.getenv("OPENAI_API_KEY")
     self.cliente = OpenAI(api_key=CHAVE_API)
@@ -17,6 +30,8 @@ class Assistente:
     self.arquivo = None
 
     self._criar_agente()
+
+
 
   def perguntar(self, pergunta, caminho_arquivo = None, estou_continuando_conversa = False):
       self._criar_thread(pergunta=pergunta, caminho_arquivo=caminho_arquivo)

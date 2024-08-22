@@ -19,6 +19,47 @@ class AlocadorTarefas:
         self.servidores = servidores
         self._monitorando = False 
 
+    def alocar_guloso(self, nome_arquivo="padrao"):
+        '''
+        Método que realiza a alocação gulosa de tarefas nos servidores.
+        :return: Alocação de tarefas e o tempo total mínimo de execução.
+        '''
+        start_time = time.time()
+        self.memoria_registros = []
+        self.memoria_maxima = 0
+        self.iteracoes = 0
+        self.registro_iteracoes = []
+
+        self._monitorando = True
+
+        # Limpar tarefas anteriores dos servidores
+        for servidor in self.servidores:
+            servidor.tarefas.clear()
+
+        # Ordenar as tarefas por tempo de execução decrescente
+        tarefas_ordenadas = sorted(self.tarefas, key=lambda tarefa: tarefa.tempo_execucao, reverse=True)
+
+        # Atribuir cada tarefa ao servidor com o menor tempo acumulado
+        for tarefa in tarefas_ordenadas:
+            servidor_menor_carga = min(self.servidores, key=lambda serv: serv.tempo_total_execucao())
+            servidor_menor_carga.adicionar_tarefa(tarefa)
+            self.iteracoes += 1
+            memoria_atual = psutil.virtual_memory().percent
+            self.memoria_registros.append(memoria_atual)
+            self.registro_iteracoes.append(self.iteracoes)
+
+        melhor_tempo = max(servidor.tempo_total_execucao() for servidor in self.servidores)
+        melhor_alocacao = [[tarefa.id for tarefa in servidor.tarefas] for servidor in self.servidores]
+
+        self.tempo_total_execucao = time.time() - start_time
+        self._monitorando = False
+        self._salvar_resultados(nome_arquivo=nome_arquivo)
+
+        print(f"Melhor tempo de execução: {melhor_tempo}")
+        print(f"Melhor alocação: {melhor_alocacao}")
+
+        return melhor_alocacao, melhor_tempo
+
     def alocar_exaustivo(self, nome_arquivo = "padrao"):
         '''
         Método que realiza a alocação exaustiva de tarefas nos servidores.

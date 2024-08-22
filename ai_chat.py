@@ -22,7 +22,12 @@ def chat(pergunta, caminho_arquivo):
 
   while pergunta != "fim":
     resposta = professor.perguntar(pergunta=pergunta, caminho_arquivo=caminho_arquivo, estou_continuando_conversa =True)
-    print(resposta)
+    
+    print(f"\n\nResposta: {resposta}")
+
+    resposta_avaliada = professor.avaliar_resultado(resposta, pergunta)
+
+    print(f"\n\nAvaliação: {resposta_avaliada}")
 
     pergunta = input("\nDigite a sua nova pergunta, ou digite 'fim' para encerrar: ")
   
