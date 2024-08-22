@@ -104,8 +104,3 @@ class Assistente:
       if self.arquivo:
           self.cliente.files.delete(self.arquivo.id)
           self.arquivo = None
-
-professor = Assistente("Analisador de Algoritmos", "Você deve analisar a qualidade dos algoritmos, sempre sendo didático e mostrando exemplos claros.")
-resposta = professor.perguntar("Qual a complexidade de tempo do método alocar_exaustivo do script alocador.py", "alocador.py")
-print(resposta)
-professor.apagar_agente()
