@@ -21,10 +21,10 @@ def chat(pergunta, caminho_arquivo):
   professor = criar_assistente()
 
   while pergunta != "fim":
-    resposta = professor.perguntar(pergunta=pergunta, caminho_arquivo=caminho_arquivo)
+    resposta = professor.perguntar(pergunta=pergunta, caminho_arquivo=caminho_arquivo, estou_continuando_conversa =True)
     print(resposta)
 
-    pergunta = input("\nDigite a sua nova pergunta, ou digite 'fim' para encerrar")
+    pergunta = input("\nDigite a sua nova pergunta, ou digite 'fim' para encerrar: ")
   
   professor.apagar_agente()
 

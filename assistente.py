@@ -18,8 +18,15 @@ class Assistente:
 
     self._criar_agente()
 
-  def perguntar(self, pergunta, caminho_arquivo = None):
+  def perguntar(self, pergunta, caminho_arquivo = None, estou_continuando_conversa = False):
       self._criar_thread(pergunta=pergunta, caminho_arquivo=caminho_arquivo)
+
+      if estou_continuando_conversa and self.thread:
+        self.cliente.beta.threads.messages.create(
+            thread_id=self.thread.id,
+            role="user",
+            content=pergunta
+        )
 
       run = self.cliente.beta.threads.runs.create_and_poll(
           thread_id=self.thread.id,

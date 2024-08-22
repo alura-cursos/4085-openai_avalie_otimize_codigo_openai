@@ -44,7 +44,7 @@ def main():
         servidores = [Servidor(id=i+1) for i in range(num_servidores)]
 
         alocador = AlocadorTarefas(tarefas, servidores)
-        melhor_alocacao, melhor_makespan = alocador.alocar_exaustivo()
+        melhor_alocacao, melhor_makespan = alocador.alocar_guloso()
 
         print(f"Simulação de Alocação de Tarefas - {exemplo_id.upper()}")
         print("=" * 50)
