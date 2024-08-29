@@ -125,3 +125,86 @@ def calcular_complexidade_memoria(argumentos):
   ferramenta.apagar_agente()
 
   return resposta
+
+def avaliar_adequacao_pep8(argumentos):
+  from assistente import Assistente
+  caminho_script = argumentos["nome_script"]
+  id_arquivo = argumentos["id_arquivo"]
+
+  nome_agente = "Assistente de Adequação ao PEP 8"
+  descricao_agente = """
+        Este assistente é projetado para analisar a conformidade de scripts Python com as diretrizes do PEP 8, o guia de estilo oficial para Python. Ele fornece uma análise detalhada do código, identificando áreas que não seguem as recomendações de boas práticas e sugerindo correções para melhorar a legibilidade e a qualidade do código.
+
+        **Instruções de Uso:**
+
+        Baseado nas diretrizes do PEP 8, este assistente aplicará verificações automáticas para garantir que o código esteja alinhado com as melhores práticas de estilo e formatação em Python. 
+
+        1. **Análise de Conformidade PEP 8**: O assistente analisará o script completo, verificando aspectos como espaçamento, nomeação de variáveis, tamanho de linhas, indentação, uso adequado de importações, e outros aspectos cobertos pelo PEP 8.
+        
+        2. **Processo de Verificação**: O assistente utilizará ferramentas e técnicas consagradas, como `flake8` e `pylint`, para identificar padrões de código que não seguem o PEP 8. Ele também fornecerá feedback específico sobre cada erro ou aviso encontrado.
+
+        3. **Identificação de Problemas**: O assistente destacará as áreas do código que não estão em conformidade com o PEP 8, explicando por que essas práticas podem afetar a legibilidade e a manutenção do código a longo prazo.
+
+        4. **Soluções e Sugestões de Correção**: O assistente recomendará correções para cada problema identificado, sugerindo mudanças no código para alinhá-lo ao PEP 8. Isso pode incluir ajustes na formatação, renomeação de variáveis, reestruturação de blocos de código, entre outros.
+
+        **Formato da Resposta em JSON:**
+
+        ```json
+        {
+            "conformidade_pep8": "parcial",
+            "problemas_identificados": [
+                {
+                    "linha": 10,
+                    "descricao": "Linha excede 79 caracteres.",
+                    "sugestao": "Quebrar a linha em múltiplas linhas."
+                },
+                {
+                    "linha": 15,
+                    "descricao": "Nome da variável 'x' é muito curto.",
+                    "sugestao": "Renomear a variável para um nome mais descritivo."
+                }
+            ],
+            "melhorias_sugeridas": "Ajustar a indentação e garantir que todas as importações estejam no início do arquivo."
+        }
+        ```
+
+        **Exemplo:**
+
+        ```python
+        def exemplo_pep8():
+            x = 1  # Nome da variável muito curto
+            if x > 0:
+                print("Valor é positivo")  # Linha muito longa, mais de 79 caracteres, considerar quebrar
+
+        # Resposta do Assistente:
+
+        # {
+        #     "conformidade_pep8": "parcial",
+        #     "problemas_identificados": [
+        #         {
+        #             "linha": 2,
+        #             "descricao": "Nome da variável 'x' é muito curto.",
+        #             "sugestao": "Renomear a variável para um nome mais descritivo."
+        #         },
+        #         {
+        #             "linha": 3,
+        #             "descricao": "Linha excede 79 caracteres.",
+        #             "sugestao": "Quebrar a linha em múltiplas linhas."
+        #         }
+        #     ],
+        #     "melhorias_sugeridas": "Ajustar a indentação e garantir que todas as importações estejam no início do arquivo."
+        # }
+        ```
+
+    """
+  ferramenta = Assistente(nome=nome_agente, instrucoes=descricao_agente, eh_ferramenta=True)
+
+  resposta = ferramenta.perguntar(
+    pergunta=f"Faça uma análise de conformidade ao PEP8 para o script {caminho_script}. Liste todos os casos possíveis", caminho_arquivo=caminho_script
+  )
+
+  print(f"Resposta da ferramenta: {resposta}")
+
+  ferramenta.apagar_agente()
+
+  return resposta

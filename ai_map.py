@@ -1,4 +1,4 @@
-from ai_tools_logic import calcular_complexidade_tempo, calcular_complexidade_memoria
+from ai_tools_logic import calcular_complexidade_tempo, calcular_complexidade_memoria, avaliar_adequacao_pep8
 
 minhas_ferramentas = [
   {
@@ -53,10 +53,32 @@ minhas_ferramentas = [
             "required": ["nome_script", "metodo_avaliado", "id_arquivo"]
         }
     }
-  }
+  },
+  {
+    "type": "function",
+    "function": {
+        "name": "avaliar_adequacao_pep8",
+        "description": "Utilize esta ferramenta para analisar a adequação de código em scripts Python conforme as diretrizes do PEP 8. A ferramenta requer o caminho do script e o ID do arquivo associado. Ela irá verificar se todo o script segue as boas práticas de codificação recomendadas pelo PEP 8, identificando possíveis problemas em todo o código e sugerindo correções para melhorar a qualidade e legibilidade.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "nome_script": {
+                    "type": "string",
+                    "description": "Nome do script informado pelo usuário, incluindo a extensão. Exemplo: script.py ao invés de file-v7X0bimuK8b3R9T242gfD2iY."
+                },
+                "id_arquivo": {
+                    "type": "string",
+                    "description": "ID do script associado na OpenAI. Exemplo: file-v7X0bimuK8b3R9T242gfD2iY."
+                }
+            },
+            "required": ["nome_script", "id_arquivo"]
+        }
+    }
+  } 
 ]
 
 mapa_ferramenta = {
   "calcular_complexidade_tempo": calcular_complexidade_tempo,
-  "calcular_complexidade_memoria" : calcular_complexidade_memoria
+  "calcular_complexidade_memoria" : calcular_complexidade_memoria,
+  "avaliar_adequacao_pep8" : avaliar_adequacao_pep8
 }
