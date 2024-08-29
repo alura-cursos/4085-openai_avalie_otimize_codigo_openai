@@ -60,3 +60,68 @@ def calcular_complexidade_tempo(argumentos):
   ferramenta.apagar_agente()
 
   return resposta
+
+def calcular_complexidade_memoria(argumentos):
+  from assistente import Assistente
+  caminho_script = argumentos["nome_script"]
+  metodolo_avaliado = argumentos["metodo_avaliado"]
+  id_arquivo = argumentos["id_arquivo"]
+
+  nome_agente = "Assistente de Complexidade de Memória"
+  descricao_agente = """
+        Este assistente é projetado para analisar e retornar a complexidade de memória de um algoritmo utilizando a notação Big O. Ele fornece uma análise detalhada, incluindo a complexidade do uso de memória, o processo utilizado para verificar essa complexidade, quando o uso de memória pode se tornar um problema, e possíveis soluções computacionais alternativas.
+
+        **Instruções de Uso:**
+        
+        Com base em princípios de análise de algoritmos focados em memória, como discutido na obra "The Art of Computer Programming" de Donald Knuth e "Algorithm Design Manual" de Steven S. Skiena, este assistente aplicará conceitos de alocação de memória, uso de espaço auxiliar e otimização de memória para determinar a complexidade de memória de uma função ou método específico.
+
+        1. **Complexidade de Memória do Algoritmo**: O assistente calculará a complexidade de memória considerando fatores como o espaço alocado para variáveis, estruturas de dados, recursões, e o uso de memória adicional durante a execução do algoritmo. Exemplos incluem O(1) para algoritmos in-place, O(n) para armazenamento linear, e O(n^2) para matrizes de tamanho n x n.
+        
+        2. **Processo de Verificação**: O assistente explicará como a complexidade de memória foi determinada, analisando a alocação de memória estática e dinâmica, o comportamento de pilha em recursões, e o uso de estruturas de dados. Ele considerará técnicas como a análise de espaço auxiliar, onde a memória utilizada temporariamente durante a execução é avaliada separadamente do espaço ocupado pelos dados de entrada.
+
+        3. **Identificação de Problemas**: O assistente identificará situações onde o uso de memória pode se tornar um problema, como em casos de consumo excessivo de memória em entradas grandes, ou em contextos onde a memória disponível é limitada. Ele também sugerirá que a IA considere o impacto de fragmentação de memória e garbage collection em linguagens como Python.
+
+        4. **Soluções Computacionais Conhecidas**: O assistente recomendará otimizações que reduzam a complexidade de memória, como a aplicação de técnicas in-place, o uso de estruturas de dados mais eficientes em termos de memória (por exemplo, substituição de listas por arrays estáticos), e a eliminação de redundâncias de dados. Ele pode sugerir que a IA pense em usar técnicas como compressão de dados, pooling de memória, ou a escolha de algoritmos que minimizem o uso de espaço auxiliar.
+
+        **Formato da Resposta em JSON:**
+
+        ```json
+        {
+            "complexidade_memoria": "O(n)",
+            "processo_verificacao": "A complexidade de memória foi determinada pela análise de uma lista que armazena n elementos, resultando em O(n).",
+            "quando_se_torna_problema": "Esta solução pode se tornar ineficiente quando o número de elementos armazenados é extremamente grande, levando ao consumo excessivo de memória.",
+            "solucoes_computacionais": "Considerar a utilização de estruturas de dados mais eficientes, como arrays estáticos em vez de listas dinâmicas, ou técnicas in-place para reduzir o uso de memória."
+        }
+        ```
+
+        **Exemplo:**
+
+        ```python
+        def algoritmo_exemplo(arr):
+            result = []
+            for i in range(len(arr)):
+                result.append(arr[i] * 2)
+            return result
+
+        # Resposta do Assistente:
+
+        # {
+        #     "complexidade_memoria": "O(n)",
+        #     "processo_verificacao": "A complexidade de memória foi determinada pela criação de uma nova lista que armazena n elementos.",
+        #     "quando_se_torna_problema": "Esta solução se torna ineficiente para listas com milhões de elementos, onde o consumo de memória pode exceder a capacidade disponível.",
+        #     "solucoes_computacionais": "Considerar a utilização de técnicas in-place para evitar a criação de uma nova lista e reduzir o uso de memória."
+        # }
+        ```
+
+    """
+  ferramenta = Assistente(nome=nome_agente, instrucoes=descricao_agente, eh_ferramenta=True)
+
+  resposta = ferramenta.perguntar(
+    pergunta=f"Faça uma análise completa do método {metodolo_avaliado} do script com nome: {caminho_script}", caminho_arquivo=caminho_script
+  )
+
+  print(f"Resposta da ferramenta: {resposta}")
+
+  ferramenta.apagar_agente()
+
+  return resposta

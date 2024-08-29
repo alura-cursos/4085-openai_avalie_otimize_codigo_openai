@@ -1,4 +1,4 @@
-from ai_tools_logic import calcular_complexidade_tempo
+from ai_tools_logic import calcular_complexidade_tempo, calcular_complexidade_memoria
 
 minhas_ferramentas = [
   {
@@ -28,9 +28,35 @@ minhas_ferramentas = [
           "required": ["nome_script", "metodo_avaliado", "id_arquivo"]
         }
       }
+  },
+  {
+    "type": "function",
+    "function": {
+        "name": "calcular_complexidade_memoria",
+        "description": "Utilize esta ferramenta para analisar a complexidade de memória de algoritmos em scripts Python. A ferramenta requer o caminho do script, o nome do método a ser analisado e o ID do arquivo associado. Ela irá medir e reportar a eficiência de uso de memória do algoritmo, identificando possíveis otimizações e destacando áreas onde o uso de memória pode se tornar um problema.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "nome_script": {
+                    "type": "string",
+                    "description": "Nome do script informado pelo usuário, incluindo a extensão. Exemplo: script.py ao invés de file-v7X0bimuK8b3R9T242gfD2iY."
+                },
+                "metodo_avaliado": {
+                    "type": "string",
+                    "description": "Nome do método que deve ser analisado. Exemplo: busca()."
+                },
+                "id_arquivo": {
+                    "type": "string",
+                    "description": "ID do script associado na OpenAI. Exemplo: file-v7X0bimuK8b3R9T242gfD2iY."
+                }
+            },
+            "required": ["nome_script", "metodo_avaliado", "id_arquivo"]
+        }
+    }
   }
 ]
 
 mapa_ferramenta = {
-  "calcular_complexidade_tempo": calcular_complexidade_tempo
+  "calcular_complexidade_tempo": calcular_complexidade_tempo,
+  "calcular_complexidade_memoria" : calcular_complexidade_memoria
 }
