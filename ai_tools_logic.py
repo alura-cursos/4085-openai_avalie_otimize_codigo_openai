@@ -9,8 +9,62 @@ from pydantic import BaseModel
 from openai import OpenAI
 from helper_models import MODELO_GPT_SCHEMA
 
+def gerar_grafico(df):
+    iteracoes = df['numero_iteracoes'].iloc[0]
+    tempo_total = df['tempo_total'].iloc[0]
+    qtd_media_memoria = df['qtd_media_memoria'].iloc[0]
+
+    fig, ax1 = plt.subplots(figsize=(10, 6))
+
+    color = 'tab:blue'
+    ax1.set_xlabel('Métricas')
+    ax1.set_ylabel('Tempo Total (s)', color=color)
+    ax1.bar('Tempo Total (s)', tempo_total, color=color)
+    ax1.tick_params(axis='y', labelcolor=color)
+
+    ax2 = ax1.twinx()  
+    color = 'tab:orange'
+    ax2.set_ylabel('Quantidade Média de Memória (%)', color=color)
+    ax2.bar('Quantidade Média de Memória', qtd_media_memoria, color=color)
+    ax2.tick_params(axis='y', labelcolor=color)
+
+    plt.title(f'Dados de Complexidade para n = {iteracoes}')
+
+    plt.tight_layout()
+
+    caminho_grafico = "grafico_complexidade.png"
+    plt.savefig(caminho_grafico, format='png')
+    plt.close()
+
+    return caminho_grafico
+
+def extrair_id_arquivo(nome_arquivo):
+    return nome_arquivo.split('/')[-1]
+
+def abrir_dados_csv(cliente, nome_arquivo):
+    if not os.path.exists(nome_arquivo):
+        nome_arquivo = cliente.files.retrieve(extrair_id_arquivo(nome_arquivo)).filename
+        return pd.read_csv(nome_arquivo)
+    else:
+        return pd.read_csv(nome_arquivo)
+
 def relatorio_complexidade_algoritmos(argumentos):
-  pass
+  from assistente import Assistente
+  from ai_chat import criar_assistente
+
+  cliente = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+  print("Chamando ferramenta de complexidade de algoritmos - relatório")
+  nome_arquivo = argumentos.get("nome_arquivo")
+
+  df = abrir_dados_csv(cliente, nome_arquivo)
+  caminho_grafico = gerar_grafico(df)
+
+  ferramenta = criar_assistente()
+  nome_script_dados = input("Qual o nome do script que gerou os dados: ")
+  nome_metodo = input("Qual o método que foi analisado: ")
+  analise_complexidade = ferramenta.perguntar(pergunta=f"Faça uma análise de complexidade para o arquivo com nome {nome_script_dados}, verifique o método: {nome_metodo}", caminho_arquivo=nome_script_dados)
+
 
 def calcular_complexidade_tempo(argumentos):
   from assistente import Assistente
