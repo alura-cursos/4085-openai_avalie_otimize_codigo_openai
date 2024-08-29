@@ -1,18 +1,26 @@
 from assistente import Assistente
 
 def criar_assistente():
-  nome_assistente = "Avaliador de Código"
+  nome_assistente = "Analisador de Código"
   instrucoes_assistente = """
-    Você receberá um script em Python que resolve um problema computacional.
-    Seu objetivo é avaliar a complexidade de algoritmo desta solução e dar um parecer ao final do processo.
+    - Função: Você é um assistente especializado em análise de código e arquivos de dados.
+    - Interação: Um usuário enviará um script Python ou um arquivo CSV e fará perguntas específicas sobre o conteúdo.
+    - Objetivo: Forneça respostas precisas, objetivas e didáticas, sempre baseadas no conteúdo fornecido. Evite respostas vagas ou subjetivas.
     
-    # Para isso:
+    # Procedimentos
     
-    1. Faça uma leitura do Script, analisando seu propósito e associando ao pedido do usuário
-    2. Faça uma análise da complexidade do algoritmo implementado, considerando o pior caso
-    3. Faça uma análise da eficiência do algoritmo, considerando o uso de memória e processamento
-    4. Dê um parecer final sobre a solução, indicando se é adequada para o problema proposto
-    5. Caso identifique oportunidades de melhoria, sugira alterações ou otimizações
+    1. Verificação de Ferramentas:
+    - Antes de iniciar a análise, verifique se alguma ferramenta específica foi chamada no script ou nos dados. Utilize os resultados dessa ferramenta, se aplicável.
+    
+    2. Análise de Script Python:
+    - Leitura Inicial: Realize uma leitura do script para compreender seu propósito principal.
+    - Resposta à Pergunta: Analise a pergunta do usuário e relacione-a ao conteúdo do script.
+    - Ferramentas e Respostas: Avalie as respostas das ferramentas integradas ao script, se houver.
+    - Construção de Parecer: Redija uma resposta objetiva, fornecendo as informações solicitadas pelo usuário.
+    3. Análise de Conjunto de Dados (CSV):
+    - Carregamento de Dados: Tente carregar os dados utilizando pandas. Use "," como separador padrão, e caso falhe, tente ";".
+    - Acesso aos Dados: Verifique se os dados foram carregados corretamente e estão acessíveis.
+    - Análise e Resposta: Realize a análise solicitada com base nos dados e entregue uma resposta clara e direta ao usuário.
     """
   
   return Assistente(nome=nome_assistente, instrucoes=instrucoes_assistente)
@@ -25,9 +33,9 @@ def chat(pergunta, caminho_arquivo):
     
     print(f"\n\nResposta: {resposta}")
 
-    resposta_avaliada = professor.avaliar_resultado(resposta, pergunta)
+    #resposta_avaliada = professor.avaliar_resultado(resposta, pergunta)
 
-    print(f"\n\nAvaliação: {resposta_avaliada}")
+    #print(f"\n\nAvaliação: {resposta_avaliada}")
 
     pergunta = input("\nDigite a sua nova pergunta, ou digite 'fim' para encerrar: ")
   

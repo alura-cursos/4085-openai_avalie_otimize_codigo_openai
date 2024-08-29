@@ -119,11 +119,7 @@ class Assistente:
           name=self.nome,
           instructions=self.instrucoes,
           model=MODELO_GPT,
-          tools=[
-              {
-                  "type":"code_interpreter"
-              }
-          ],
+          tools=ferramentas_agente,
           tool_resources={
               "code_interpreter":{
                   "file_ids": []
