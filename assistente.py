@@ -4,6 +4,9 @@ from dotenv import load_dotenv
 import os
 import google.generativeai as genai
 
+from ai_map import mapa_ferramenta, minhas_ferramentas
+import json
+
 load_dotenv()
 
 class Assistente:
@@ -19,7 +22,7 @@ class Assistente:
 
         return resposta.text
 
-  def __init__(self, nome, instrucoes):
+  def __init__(self, nome, instrucoes, eh_ferramenta = False):
     CHAVE_API = os.getenv("OPENAI_API_KEY")
     self.cliente = OpenAI(api_key=CHAVE_API)
 
@@ -29,12 +32,32 @@ class Assistente:
     self.thread = None
     self.arquivo = None
 
-    self._criar_agente()
+    self._criar_agente(eh_ferramenta)
 
+  def construir_resposta_completa(self, lista_mensagens):
+    resposta_completa = []
+    mensagens_resposta = self.cliente.beta.threads.messages.list(
+        thread_id=self.thread.id
+    )
 
+    for uma_mensagem in mensagens_resposta.data[0].content:
+        if hasattr(uma_mensagem, "text") and uma_mensagem.text:
+            resposta_completa.append(uma_mensagem.text.value)
+            anotacoes = getattr(uma_mensagem.text, "annotations", None)
+
+            if anotacoes:
+                caminho_arquivo_resposta = getattr(anotacoes[0], "file_path", None)
+                if caminho_arquivo_resposta:
+                    id_arquivo = getattr(caminho_arquivo_resposta, "file_id", None)
+                    conteudo_binario = self.cliente.files.content(id_arquivo)
+                    resposta_completa.append(f"\n\nCódigo Gerado\n\n{conteudo_binario.text}")
+      
+    return "".join(resposta_completa)
 
   def perguntar(self, pergunta, caminho_arquivo = None, estou_continuando_conversa = False):
       self._criar_thread(pergunta=pergunta, caminho_arquivo=caminho_arquivo)
+      resposta_completa = ""
+      respostas_ferramentas = []
 
       if estou_continuando_conversa and self.thread:
         self.cliente.beta.threads.messages.create(
@@ -48,25 +71,39 @@ class Assistente:
           assistant_id=self.agente.id
       )
 
+      if run.status == "requires_action":
+          for uma_ferramenta in run.required_action.submit_tool_outputs.tool_calls:
+              print(f"Uma ferramenta chamada: {uma_ferramenta.function.name}")
+              argumentos = json.loads(uma_ferramenta.function.arguments)
+              resposta_uma_ferramenta = {
+                "tool_call_id": uma_ferramenta.id,
+                "output" : mapa_ferramenta[uma_ferramenta.function.name](argumentos)
+              }
+              respostas_ferramentas.append(resposta_uma_ferramenta)
+
+          if respostas_ferramentas:
+            try:
+                run = self.cliente.beta.threads.runs.submit_tool_outputs_and_poll(
+                    thread_id=self.thread.id,
+                    run_id=run.id,
+                    tool_outputs=respostas_ferramentas
+                )
+                print("Tool outputs submitted successfully.")
+            except Exception as e:
+                print("Failed to submit tool outputs:", e)
+            else:
+                print("No tool outputs to submit.")
+
       if run.status == "completed":
-          respota_completa = []
-          mensagens_resposta = self.cliente.beta.threads.messages.list(
-              thread_id=self.thread.id
-          )
+          lista_mensagens = self.cliente.beta.threads.messages.list(
+                thread_id=self.thread.id
+            )
+            
+          resposta_completa += self.construir_resposta_completa(lista_mensagens)
 
-          for uma_mensagem in mensagens_resposta.data[0].content:
-              if hasattr(uma_mensagem, "text") and uma_mensagem.text:
-                  respota_completa.append(uma_mensagem.text.value)
-                  anotacoes = getattr(uma_mensagem.text, "annotations", None)
-
-                  if anotacoes:
-                      caminho_arquivo_resposta = getattr(anotacoes[0], "file_path", None)
-                      if caminho_arquivo_resposta:
-                          id_arquivo = getattr(caminho_arquivo_resposta, "file_id", None)
-                          conteudo_binario = self.cliente.files.content(id_arquivo)
-                          respota_completa.append(f"\n\nCódigo Gerado\n\n{conteudo_binario.text}")
-      
-      return "".join(respota_completa)
+      return resposta_completa
+ 
+          
 
   def associar_arquivo(self, caminho_arquivo):
       if self.arquivo is None:
@@ -75,7 +112,9 @@ class Assistente:
               purpose="assistants"
           )
 
-  def _criar_agente(self):
+  def _criar_agente(self, eh_ferramenta = False):
+      ferramentas_agente = minhas_ferramentas if not eh_ferramenta else [{"type":"code_interpreter"}]
+      
       self.agente = self.cliente.beta.assistants.create(
           name=self.nome,
           instructions=self.instrucoes,
