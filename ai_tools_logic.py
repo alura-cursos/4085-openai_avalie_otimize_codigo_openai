@@ -48,6 +48,10 @@ def abrir_dados_csv(cliente, nome_arquivo):
     else:
         return pd.read_csv(nome_arquivo)
 
+class RespostaFormatada(BaseModel):
+    observacao_geral: str
+    sugestoes: str
+
 def relatorio_complexidade_algoritmos(argumentos):
   from assistente import Assistente
   from ai_chat import criar_assistente
@@ -64,6 +68,56 @@ def relatorio_complexidade_algoritmos(argumentos):
   nome_script_dados = input("Qual o nome do script que gerou os dados: ")
   nome_metodo = input("Qual o método que foi analisado: ")
   analise_complexidade = ferramenta.perguntar(pergunta=f"Faça uma análise de complexidade para o arquivo com nome {nome_script_dados}, verifique o método: {nome_metodo}", caminho_arquivo=nome_script_dados)
+
+  prompt_sistema = """
+        Você receberá o resultado de análise de complexidade de algoritmos e um arquivo CSV com alguns dados de um teste.
+        Verifique as iterações, o tempo total e a quantidade média de memória utilizada.
+    """
+
+  resposta_formatada = cliente.beta.chat.completions.parse(
+        model=MODELO_GPT_SCHEMA,
+        messages=[
+            {"role": "system", "content": prompt_sistema},
+            {"role": "user", "content": f""""
+                Gere um parecer sobre os dados de complexidade de algoritmos. 
+                Use esta análise {analise_complexidade}.
+                Use estes dados {df}
+            """
+            },
+        ],
+        response_format=RespostaFormatada,
+    )
+  
+  resposta_json = json.loads(resposta_formatada.choices[0].message.content)
+
+  html_content = f"""
+    <html>
+    <head>
+        <title>Análise de Complexidade de Algoritmos</title>
+    </head>
+    <body>
+        <h1 style="text-align:center;">Análise de Complexidade de Algoritmos</h1>
+        <div style="text-align:center;">
+            <img src="{caminho_grafico}" alt="Gráfico de Complexidade">
+        </div>
+        <h2 style="font-size: 1rem;">Parecer</h2>
+        <div style="padding: 1rem;">
+        <h3 style="color: rgb(9, 51, 102);"><strong>Observação Geral:</strong></h3>
+        <p> {resposta_json['observacao_geral']}</p>
+        <h3 style="color: rgb(9, 51, 102);"><strong>Sugestões:</strong></h3>
+        <p> {resposta_json['sugestoes']}</p>
+        </div>
+    </body>
+    </html>
+    """
+  html_path = os.path.join(os.getcwd(), "analise_complexidade.html")
+  with open(html_path, "w", encoding="utf-8") as html_file:
+    html_file.write(html_content)
+
+  ferramenta.apagar_agente()
+
+  return resposta_formatada.choices[0].message.content
+  
 
 
 def calcular_complexidade_tempo(argumentos):
