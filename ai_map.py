@@ -1,4 +1,4 @@
-from ai_tools_logic import calcular_complexidade_tempo, calcular_complexidade_memoria, avaliar_adequacao_pep8
+from ai_tools_logic import calcular_complexidade_tempo, calcular_complexidade_memoria, avaliar_adequacao_pep8, relatorio_complexidade_algoritmos
 
 minhas_ferramentas = [
   {
@@ -74,11 +74,29 @@ minhas_ferramentas = [
             "required": ["nome_script", "id_arquivo"]
         }
     }
+  },
+  {
+    "type": "function",
+    "function": {
+        "name": "relatorio_complexidade_algoritmos",
+        "description": "Utilize esta ferramenta para gerar um relatório de complexidade com base em um arquivo CSV. Sempre que um relatório for mencionado, use ela, e nenhuma outra..",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "nome_arquivo": {
+                    "type": "string",
+                    "description": "Nome do arquivo CSV que será análisado. O arquivo deve ter a extensão .csv e ser extraído da pergunta do usuário. Exemplo: dados_complexidade.csv"
+                }
+            },
+            "required": ["nome_arquivo"]
+        }
+    }
   } 
 ]
 
 mapa_ferramenta = {
   "calcular_complexidade_tempo": calcular_complexidade_tempo,
   "calcular_complexidade_memoria" : calcular_complexidade_memoria,
-  "avaliar_adequacao_pep8" : avaliar_adequacao_pep8
+  "avaliar_adequacao_pep8" : avaliar_adequacao_pep8,
+  "relatorio_complexidade_algoritmos" : relatorio_complexidade_algoritmos
 }
