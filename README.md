@@ -9,7 +9,7 @@ Code Interpreter: Performance e Co-Programação com a OpenAI
 **Windows:**
 ```bash
 python -m venv curso_otimizacao
-curso_otimizacao\Scripts\activate
+source curso_otimizacao/Scripts/activate
 ```
 
 **Mac/Linux:**
