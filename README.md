@@ -1,5 +1,4 @@
-
-<img width="996" alt="Capa4085" src="https://github.com/user-attachments/assets/de46908a-4021-4c97-8d12-f0c8aebd6c22">
+<img width="996" alt="image" src="https://github.com/user-attachments/assets/4ef7702c-3ea4-436b-b6e8-2ac7a96372e9">
 
 # Code Interpreter: Performance e Co-Programação com a OpenAI
 
