@@ -1,4 +1,6 @@
-# Code Interpreter: Projetando Assistentes para Co-Design de Código com a OpenAI
+#<img width="996" alt="Capa4085" src="https://github.com/user-attachments/assets/a248c5af-8f71-4756-b6e7-2d426b8e7314">
+
+Code Interpreter: Performance e Co-Programação com a OpenAI
 
 ## ⚙️ Configuração do Ambiente
 
