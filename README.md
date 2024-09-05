@@ -1,6 +1,6 @@
-#<img width="996" alt="Capa4085" src="https://github.com/user-attachments/assets/a248c5af-8f71-4756-b6e7-2d426b8e7314">
+<img width="996" alt="image" src="https://github.com/user-attachments/assets/4ef7702c-3ea4-436b-b6e8-2ac7a96372e9">
 
-Code Interpreter: Performance e Co-Programação com a OpenAI
+# Code Interpreter: Performance e Co-Programação com a OpenAI
 
 ## ⚙️ Configuração do Ambiente
 
