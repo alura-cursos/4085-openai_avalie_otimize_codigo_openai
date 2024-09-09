@@ -1,6 +1,6 @@
 <img width="996" alt="image" src="https://github.com/user-attachments/assets/4ef7702c-3ea4-436b-b6e8-2ac7a96372e9">
 
-# Code Interpreter: Performance e Co-Programação com a OpenAI
+# OpenAI: avalie e otimize o seu código com Code Interpreter
 
 ## ⚙️ Configuração do Ambiente
 
