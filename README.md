@@ -9,7 +9,7 @@
 **Windows:**
 ```bash
 python -m venv curso_otimizacao
-source curso_otimizacao/Scripts/activate
+curso_otimizacao\Scripts\activate
 ```
 
 **Mac/Linux:**
